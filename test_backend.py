@@ -94,7 +94,8 @@ class QuizBackendTestCase(unittest.TestCase):
                       content_type='application/json')
         
         # Get dashboard stats with authorization header
-        headers = {'Authorization': 'Bearer AdminQuiz2026'}
+        import app as app_mod
+        headers = {'Authorization': f'Bearer {app_mod.ADMIN_PASSCODE}'}
         dash_response = self.app.get('/api/admin/dashboard', headers=headers)
         self.assertEqual(dash_response.status_code, 200)
         data = json.loads(dash_response.data)
@@ -148,6 +149,58 @@ class QuizBackendTestCase(unittest.TestCase):
         count = cursor.fetchone()[0]
         conn.close()
         self.assertEqual(count, 15)
+
+    def test_add_question(self):
+        """Test adding questions via authorized endpoint."""
+        # Unauthorized check
+        payload = {
+            'topic': 'Recursion',
+            'question': 'What is the base case?',
+            'options': ['Option A', 'Option B', 'Option C', 'Option D'],
+            'correct_idx': 'A'
+        }
+        res = self.app.post('/api/admin/add-question', 
+                            data=json.dumps(payload),
+                            content_type='application/json')
+        self.assertEqual(res.status_code, 401)
+
+        # Authorized check
+        import app as app_mod
+        headers = {'Authorization': f'Bearer {app_mod.ADMIN_PASSCODE}'}
+        original_questions_path = app_mod.QUESTIONS_PATH
+        test_questions_path = 'test_questions.json'
+        
+        initial_q = [{
+            'id': 1,
+            'topic': 'Variables',
+            'question': 'What is x?',
+            'options': ['1', '2', '3', '4'],
+            'correct': '1'
+        }]
+        with open(test_questions_path, 'w', encoding='utf-8') as f:
+            json.dump(initial_q, f)
+            
+        app_mod.QUESTIONS_PATH = test_questions_path
+        
+        try:
+            res = self.app.post('/api/admin/add-question',
+                                headers=headers,
+                                data=json.dumps(payload),
+                                content_type='application/json')
+            self.assertEqual(res.status_code, 200)
+            data = json.loads(res.data)
+            self.assertTrue(data['success'])
+            self.assertEqual(data['question']['id'], 2)
+            self.assertEqual(data['question']['correct'], 'Option A')
+            
+            with open(test_questions_path, 'r', encoding='utf-8') as f:
+                loaded = json.load(f)
+            self.assertEqual(len(loaded), 2)
+            self.assertEqual(loaded[1]['topic'], 'Recursion')
+        finally:
+            app_mod.QUESTIONS_PATH = original_questions_path
+            if os.path.exists(test_questions_path):
+                os.remove(test_questions_path)
 
 if __name__ == '__main__':
     unittest.main()

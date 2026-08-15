@@ -384,3 +384,58 @@ function highlightPython(code) {
         return match;
     });
 }
+
+// Controller for new question additions from dashboard
+window.submitNewQuestion = async function(e) {
+    e.preventDefault();
+    
+    const topic = document.getElementById('q-add-topic').value.trim();
+    const question = document.getElementById('q-add-text').value.trim();
+    const optA = document.getElementById('q-opt-a').value.trim();
+    const optB = document.getElementById('q-opt-b').value.trim();
+    const optC = document.getElementById('q-opt-c').value.trim();
+    const optD = document.getElementById('q-opt-d').value.trim();
+    const correctIdx = document.getElementById('q-correct-select').value;
+    
+    if (!topic || !question || !optA || !optB || !optC || !optD || !correctIdx) {
+        alert('Please fill out all fields.');
+        return;
+    }
+    
+    const payload = {
+        topic: topic,
+        question: question,
+        options: [optA, optB, optC, optD],
+        correct_idx: correctIdx
+    };
+    
+    try {
+        const res = await fetch('/api/admin/add-question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + adminPasscode
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (res.status === 401) {
+            handleUnauthorized();
+            return;
+        }
+        
+        const data = await res.json();
+        if (res.ok) {
+            alert('Success! Question has been safely saved to database.');
+            document.getElementById('add-question-form').reset();
+            
+            // Refresh dashboard data instantly
+            fetchData();
+        } else {
+            alert(data.error || 'Failed to save question.');
+        }
+    } catch (err) {
+        console.error('Failed to submit question:', err);
+        alert('Network error while saving question.');
+    }
+};

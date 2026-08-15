@@ -38,14 +38,55 @@
         </div>
 
         <div class="dashboard-sections">
-            <!-- Left Panel: Suspended / Blocked Users -->
-            <div class="section-card">
-                <h2>
-                    <span>Suspended Users</span>
-                    <span id="blocked-count-badge" style="font-size: 0.9rem; background: var(--danger); padding: 2px 8px; border-radius: 20px; color: white;">0</span>
-                </h2>
-                <div id="blocked-list-container" class="blocked-list">
-                    <!-- Suspended IPs loaded dynamically -->
+            <!-- Left Panel: Suspended / Blocked Users & Add Question -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                <div class="section-card">
+                    <h2>
+                        <span>Suspended Users</span>
+                        <span id="blocked-count-badge" style="font-size: 0.9rem; background: var(--danger); padding: 2px 8px; border-radius: 20px; color: white;">0</span>
+                    </h2>
+                    <div id="blocked-list-container" class="blocked-list">
+                        <!-- Suspended IPs loaded dynamically -->
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2 style="border-bottom: none; padding-bottom: 0; margin-bottom: 15px;">Add New Question</h2>
+                    <form id="add-question-form" onsubmit="submitNewQuestion(event)">
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label for="q-add-topic">Topic</label>
+                            <input type="text" id="q-add-topic" placeholder="e.g., Slicing" required style="padding: 10px 15px;">
+                        </div>
+                        
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label for="q-add-text">Question Text (Markdown code supported)</label>
+                            <textarea id="q-add-text" rows="5" placeholder="Predict the output of:&#10;```python&#10;print(10 // 3)&#10;```" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 15px; color: var(--text-primary); outline: none; font-family: inherit; font-size: 1rem; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <div class="input-group" style="margin-bottom: 10px;">
+                            <label>Options</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="text" id="q-opt-a" placeholder="Option A" required style="padding: 10px 15px;">
+                                <input type="text" id="q-opt-b" placeholder="Option B" required style="padding: 10px 15px;">
+                                <input type="text" id="q-opt-c" placeholder="Option C" required style="padding: 10px 15px;">
+                                <input type="text" id="q-opt-d" placeholder="Option D" required style="padding: 10px 15px;">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <label for="q-correct-select">Correct Option</label>
+                            <select id="q-correct-select" required style="width: 100%; background: rgba(20, 16, 32, 0.9); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 15px; color: var(--text-primary); outline: none; font-family: inherit; font-size: 1rem; cursor: pointer;">
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn" style="padding: 12px; font-size: 1rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            ➕ Save Question
+                        </button>
+                    </form>
                 </div>
             </div>
 

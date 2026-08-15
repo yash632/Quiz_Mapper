@@ -1,7 +1,12 @@
 import os
 import json
 import sqlite3
+import tempfile
+import threading
 from flask import Flask, request, jsonify, send_from_directory
+
+file_lock = threading.Lock()
+
 
 app = Flask(__name__, static_folder='static')
 
@@ -380,6 +385,57 @@ def admin_clear_data():
         cursor.execute('DELETE FROM blocked_ips')
         conn.commit()
     return jsonify({'success': True, 'message': 'All data has been cleared.'})
+
+@app.route('/api/admin/add-question', methods=['POST'])
+def add_question():
+    """Safely adds a new question to questions.json using locking and atomic replacement."""
+    if not check_admin_auth():
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    data = request.get_json() or {}
+    topic = data.get('topic', '').strip()
+    question = data.get('question', '').strip()
+    options = data.get('options', [])
+    correct_idx = data.get('correct_idx', '').strip()
+    
+    if not topic or not question or len(options) != 4 or correct_idx not in ['A', 'B', 'C', 'D']:
+        return jsonify({'error': 'All fields are required, and there must be exactly 4 options.'}), 400
+        
+    idx_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+    correct_answer = options[idx_map[correct_idx]].strip()
+    
+    with file_lock:
+        questions = load_questions()
+        next_id = max([q['id'] for q in questions]) + 1 if questions else 1
+        
+        new_q = {
+            'id': next_id,
+            'topic': topic,
+            'question': question,
+            'options': [opt.strip() for opt in options],
+            'correct': correct_answer
+        }
+        questions.append(new_q)
+        
+        # Atomic file write to avoid file truncation/corruption on concurrent reads
+        temp_path = None
+        try:
+            dir_name = os.path.dirname(os.path.abspath(QUESTIONS_PATH))
+            temp_fd, temp_path = tempfile.mkstemp(dir=dir_name, prefix='questions_', suffix='.json')
+            with os.fdopen(temp_fd, 'w', encoding='utf-8') as temp_f:
+                json.dump(questions, temp_f, indent=2, ensure_ascii=False)
+            os.replace(temp_path, QUESTIONS_PATH)
+        except Exception as e:
+            if temp_path and os.path.exists(temp_path):
+                os.remove(temp_path)
+            return jsonify({'error': f'Failed to write to file safely: {str(e)}'}), 500
+            
+    return jsonify({
+        'success': True,
+        'message': 'Question added successfully',
+        'question': new_q
+    })
+
 
 if __name__ == '__main__':
     # Running local server
