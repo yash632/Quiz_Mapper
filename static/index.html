@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Masterclass Quiz</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. Welcome View -->
+        <div id="welcome-view" class="view glass-card active">
+            <h1>Python Advanced Quiz</h1>
+            <p class="subtitle">Test your Python depth with our objective & code questions.</p>
+            
+            <div class="rules-box">
+                <h3>⚠️ Exam Rules:</h3>
+                <ul>
+                    <li>Once you click an option, it will be <strong>automatically submitted</strong>. You cannot change your choice.</li>
+                    <li>The correct answer is used only for scoring and will <strong>not</strong> be revealed during the quiz.</li>
+                    <!-- <li><strong>No Tab Switching:</strong> If you change tabs, minimize the window, or look away (loss of focus), the quiz will lock immediately, and your IP will be blocked until the admin releases it.</li> -->
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label for="username">Enter Your Name</label>
+                <input type="text" id="username" placeholder="e.g., Jane Doe" autocomplete="off">
+            </div>
+
+            <button id="start-btn" class="btn">
+                <span>Start Quiz Session</span>
+                <span style="font-size: 1.2rem;">🚀</span>
+            </button>
+        </div>
+
+        <!-- 2. Quiz View -->
+        <div id="quiz-view" class="view glass-card">
+            <div class="quiz-header">
+                <div class="user-info">
+                    Participant: <span id="display-name" style="color: #a78bfa;">User</span>
+                </div>
+                <div class="progress-text">
+                    Question <span id="current-q-index">1</span> of <span id="total-q-count">20</span>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div class="question-container">
+                <div id="q-topic" class="question-topic">Topic</div>
+                <div id="q-text" class="question-text">
+                    Loading question text...
+                </div>
+            </div>
+
+            <div id="options-container" class="options-grid">
+                <!-- Buttons dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- 3. Blocked View -->
+        <div id="blocked-view" class="view glass-card blocked-card">
+            <div class="blocked-icon">🔒</div>
+            <h1>Access Forbidden</h1>
+            <p class="subtitle" style="color: #fca5a5;">Your session has been suspended.</p>
+            
+            <p style="text-align: center; margin-bottom: 20px; color: var(--text-secondary); line-height: 1.6;">
+                The anti-cheat algorithm detected that you navigated away from this tab or minimized the browser window.
+            </p>
+
+            <div class="blocked-reason">
+                Reason: <span id="block-reason-text">Tab Focus Lost (Cheat Attempt)</span>
+            </div>
+
+            <p style="text-align: center; color: var(--text-secondary); font-size: 0.95rem;">
+                Please contact the administrator or quiz host to request an IP unblock.
+            </p>
+        </div>
+
+        <!-- 4. Completion View -->
+        <div id="completion-view" class="view glass-card completion-card">
+            <div class="score-circle-container">
+                <div class="score-circle">
+                    <div id="score-val" class="score-number">0</div>
+                    <div class="score-total">out of <span id="score-total-val">20</span></div>
+                </div>
+            </div>
+            
+            <h1>Quiz Completed!</h1>
+            <p class="subtitle">Thank you for participating.</p>
+
+            <div class="results-summary">
+                Great job! Your answers have been successfully registered in the ACID secure logs. 
+                Your final score is <span id="final-pct" class="success-badge">0%</span>.
+            </div>
+            
+            <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+                Results locked under session hash logs.
+            </p>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

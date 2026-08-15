@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Mapper Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+
+    <div class="admin-container">
+        <header>
+            <div>
+                <h1>Quiz Control Center</h1>
+                <p style="color: var(--text-secondary); margin-top: 5px;">Monitor user progression, check answer logs, and manage IP suspensions.</p>
+            </div>
+            <button id="clear-db-btn" class="danger-btn">⚠️ Reset Data</button>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Registered</div>
+                <div id="stat-registered" class="stat-value">0</div>
+            </div>
+            <div class="stat-card completed">
+                <div class="stat-label">Completed Quizzes</div>
+                <div id="stat-completed" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Score</div>
+                <div id="stat-avg" class="stat-value">0 / 20</div>
+            </div>
+            <div class="stat-card blocked">
+                <div class="stat-label">Blocked IPs</div>
+                <div id="stat-blocked" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <div class="dashboard-sections">
+            <!-- Left Panel: Suspended / Blocked Users -->
+            <div class="section-card">
+                <h2>
+                    <span>Suspended Users</span>
+                    <span id="blocked-count-badge" style="font-size: 0.9rem; background: var(--danger); padding: 2px 8px; border-radius: 20px; color: white;">0</span>
+                </h2>
+                <div id="blocked-list-container" class="blocked-list">
+                    <!-- Suspended IPs loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Right Panel: Submissions and answers breakdown -->
+            <div class="section-card">
+                <h2>Participant Log & Answers</h2>
+                <div id="submissions-list-container" class="submissions-list">
+                    <!-- Submissions list loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Authentication Modal -->
+    <div id="admin-login-modal" class="admin-login-modal">
+        <div class="glass-card login-card">
+            <h2 style="color: #a78bfa; margin-bottom: 10px; font-weight: 700; border-bottom: none; padding-bottom: 0;">Admin Authorization</h2>
+            <p class="subtitle" style="margin-bottom: 20px; text-align: left; font-size: 0.95rem;">Enter the administrator passcode to access the control center.</p>
+            
+            <div class="input-group">
+                <label for="admin-passcode-input">Admin Passcode</label>
+                <input type="password" id="admin-passcode-input" placeholder="Enter passcode..." autocomplete="off">
+            </div>
+            
+            <div id="login-error-msg" style="color: var(--danger); text-align: center; margin-bottom: 15px; font-weight: 500; display: none;">
+                Incorrect passcode. Access Denied.
+            </div>
+
+            <button id="login-submit-btn" class="btn">
+                Authorize Access
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>

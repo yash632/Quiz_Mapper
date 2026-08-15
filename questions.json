@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "topic": "Operator Precedence",
+    "question": "What is the output of the following Python expression?\n```python\nprint(2 ** 3 ** 2)\n```",
+    "options": ["64", "512", "8", "None of the above"],
+    "correct": "512"
+  },
+  {
+    "id": 2,
+    "topic": "List References",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)\n```",
+    "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "AttributeError", "RuntimeError"],
+    "correct": "[1, 2, 3, 4]"
+  },
+  {
+    "id": 3,
+    "topic": "Mutable Default Arguments",
+    "question": "What is the output of the following Python program?\n```python\ndef append_to(element, to=[]):\n    to.append(element)\n    return to\n\nmy_list = append_to(12)\nmy_list = append_to(52)\nprint(my_list)\n```",
+    "options": ["[12]", "[52]", "[12, 52]", "An error is raised"],
+    "correct": "[12, 52]"
+  },
+  {
+    "id": 4,
+    "topic": "Scope & Closure",
+    "question": "What does the following code print?\n```python\ndef outer():\n    x = 'local'\n    def inner():\n        nonlocal x\n        x = 'nonlocal'\n    inner()\n    print(x)\nouter()\n```",
+    "options": ["local", "nonlocal", "NameError", "None"],
+    "correct": "nonlocal"
+  },
+  {
+    "id": 5,
+    "topic": "List Comprehension Scope",
+    "question": "In Python 3, what is the output of the following snippet?\n```python\nx = 10\n[x for x in range(5)]\nprint(x)\n```",
+    "options": ["4", "10", "5", "NameError"],
+    "correct": "10"
+  },
+  {
+    "id": 6,
+    "topic": "Tuple & List Concatenation",
+    "question": "What happens when you run this code?\n```python\ntup = (1, 2)\ntup += (3, 4)\nprint(tup)\n```",
+    "options": [
+      "(1, 2, 3, 4)",
+      "TypeError: 'tuple' object does not support item assignment",
+      "(1, 2, (3, 4))",
+      "AttributeError"
+    ],
+    "correct": "(1, 2, 3, 4)"
+  },
+  {
+    "id": 7,
+    "topic": "Dictionary Keys",
+    "question": "Which of the following can NOT be used as a key in a Python dictionary?",
+    "options": ["(1, 2)", "frozenset([1, 2])", "[1, 2]", "12.34"],
+    "correct": "[1, 2]"
+  },
+  {
+    "id": 8,
+    "topic": "Boolean & Logical Operators",
+    "question": "What is the output of the expression `1 and 2 or 3`?",
+    "options": ["1", "2", "3", "True"],
+    "correct": "2"
+  },
+  {
+    "id": 9,
+    "topic": "Generators vs Lists",
+    "question": "What type of object is returned by the expression `(x*x for x in range(5))`?",
+    "options": ["generator", "tuple", "list", "iterator"],
+    "correct": "generator"
+  },
+  {
+    "id": 10,
+    "topic": "String Slicing",
+    "question": "What is the output of `\"Python\"[::-1]`?",
+    "options": ["P", "n", "nohtyP", "Python"],
+    "correct": "nohtyP"
+  },
+  {
+    "id": 11,
+    "topic": "Class Variables",
+    "question": "What will be printed by the following code?\n```python\nclass Dog:\n    legs = 4\n\nd1 = Dog()\nd2 = Dog()\nDog.legs = 3\nprint(d1.legs, d2.legs)\n```",
+    "options": ["4 4", "3 3", "3 4", "AttributeError"],
+    "correct": "3 3"
+  },
+  {
+    "id": 12,
+    "topic": "Exception Handling",
+    "question": "What will be the output of this exception handling block?\n```python\ntry:\n    print(1 / 0)\nexcept ZeroDivisionError:\n    print('Zero')\nelse:\n    print('Else')\nfinally:\n    print('Finally')\n```",
+    "options": [
+      "Zero\\nFinally",
+      "Zero\\nElse\\nFinally",
+      "Zero",
+      "Finally"
+    ],
+    "correct": "Zero\nFinally"
+  },
+  {
+    "id": 13,
+    "topic": "Decorators",
+    "question": "Which decorator is used to define a method inside a class that can be called on the class itself rather than on instances?",
+    "options": ["@staticmethod", "@classmethod", "@instancemethod", "@property"],
+    "correct": "@classmethod"
+  },
+  {
+    "id": 14,
+    "topic": "Memory & Identity",
+    "question": "What is the output of this comparison?\n```python\na = [1, 2]\nb = [1, 2]\nprint(a is b, a == b)\n```",
+    "options": ["True True", "False True", "True False", "False False"],
+    "correct": "False True"
+  },
+  {
+    "id": 15,
+    "topic": "String Operations",
+    "question": "What is the output of `'-'.join(['a', 'b', 'c'])`?",
+    "options": ["a-b-c", "abc-", "-abc", "TypeError"],
+    "correct": "a-b-c"
+  },
+  {
+    "id": 16,
+    "topic": "Built-in Functions",
+    "question": "What is the output of `any([False, 0, '', []])`?",
+    "options": ["True", "False", "None", "TypeError"],
+    "correct": "False"
+  },
+  {
+    "id": 17,
+    "topic": "Set Operations",
+    "question": "What will be the output of the following set operation?\n```python\na = {1, 2, 3}\nb = {3, 4, 5}\nprint(a & b)\n```",
+    "options": ["{1, 2, 3, 4, 5}", "{3}", "{1, 2, 4, 5}", "set()"],
+    "correct": "{3}"
+  },
+  {
+    "id": 18,
+    "topic": "Integer Cache",
+    "question": "In standard CPython, what is the output of:\n```python\nx = 256\ny = 256\nprint(x is y)\n```",
+    "options": ["True", "False", "SyntaxError", "None"],
+    "correct": "True"
+  },
+  {
+    "id": 19,
+    "topic": "Coding Challenge: Count Vowels",
+    "question": "Predict the output of this vowel counting function:\n```python\ndef count_vowels(s):\n    return sum(1 for char in s.lower() if char in 'aeiou')\n\nprint(count_vowels('Hello World! Python Rules.'))\n```",
+    "options": ["6", "7", "8", "5"],
+    "correct": "6"
+  },
+  {
+    "id": 20,
+    "topic": "Coding Challenge: Cumulative Sum",
+    "question": "What is the output of the following function that computes prefix sums?\n```python\ndef prefix_sums(arr):\n    res = []\n    curr = 0\n    for num in arr:\n        curr += num\n        res.append(curr)\n    return res\n\nprint(prefix_sums([2, 4, 6]))\n```",
+    "options": ["[2, 6, 12]", "[2, 4, 6]", "[12, 12, 12]", "[2, 6, 8]"],
+    "correct": "[2, 6, 12]"
+  }
+]
