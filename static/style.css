@@ -475,3 +475,106 @@ p.subtitle {
 .token.function { color: #60a5fa; }
 .token.builtin { color: #a78bfa; }
 .token.class-name { color: #22d3ee; }
+
+/* Details Answer Grid & Review sheet styles */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.detail-row {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.detail-q {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.detail-ans-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.ans-indicator {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.ans-indicator.selected {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+
+.ans-indicator.correct {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #a7f3d0;
+}
+
+.ans-indicator.unanswered {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+}
+
+.submission-details-scroll {
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.submission-details-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.submission-details-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+}
+
+.submission-details-scroll::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 10px;
+}
+
+.submission-details-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.5);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-row pre {
+    background: rgba(10, 8, 16, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px 15px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.detail-row code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #f3f0f7;
+}
+

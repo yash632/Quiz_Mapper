@@ -3,6 +3,12 @@ let currentIndex = 0;
 let userName = '';
 let isQuizActive = false;
 
+// Detailed results review state
+let resultsQuestions = [];
+let resultsAnswers = {};
+let resultsPage = 0;
+
+
 // DOM Elements
 const welcomeView = document.getElementById('welcome-view');
 const quizView = document.getElementById('quiz-view');
@@ -213,9 +219,9 @@ function renderCompletion(score) {
     isQuizActive = false;
     
     scoreVal.textContent = score;
-    const count = questions.length || 20;
-    const pct = Math.round((score / count) * 100);
-    finalPct.textContent = `${pct}%`;
+    
+    // Fetch and render the detailed review sheet
+    fetchResultsAndRender();
 }
 
 // Swap View Layouts
@@ -303,3 +309,124 @@ window.addEventListener('blur', () => {
         flagCheating('Focus lost (Window blurred)');
     }
 });
+
+// --- Detailed Results Review sheet rendering logic ---
+
+async function fetchResultsAndRender() {
+    try {
+        const res = await fetch('/api/results');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        resultsQuestions = data.questions;
+        resultsAnswers = data.answers;
+        resultsPage = 0;
+        
+        // Dynamically compute score ratio and percentage
+        const score = parseInt(scoreVal.textContent) || 0;
+        scoreTotalVal.textContent = resultsQuestions.length;
+        const pct = Math.round((score / resultsQuestions.length) * 100);
+        finalPct.textContent = `${pct}%`;
+        
+        const container = document.getElementById('results-breakdown-container');
+        if (container) {
+            container.style.display = 'block';
+        }
+        renderUserResultsSheet();
+    } catch (err) {
+        console.error('Error fetching quiz results:', err);
+    }
+}
+
+function renderUserResultsSheet() {
+    const grid = document.getElementById('user-results-grid');
+    const pagination = document.getElementById('user-results-pagination');
+    if (!grid || !pagination) return;
+    
+    if (resultsQuestions.length === 0) {
+        grid.innerHTML = '<p>Loading results details...</p>';
+        return;
+    }
+    
+    const itemsPerPage = 10;
+    const startIdx = resultsPage * itemsPerPage;
+    const endIdx = Math.min(startIdx + itemsPerPage, resultsQuestions.length);
+    const totalPages = Math.ceil(resultsQuestions.length / itemsPerPage);
+    
+    const pageQuestions = resultsQuestions.slice(startIdx, endIdx);
+    
+    let html = '';
+    pageQuestions.forEach(q => {
+        const qIdStr = String(q.id);
+        const answered = resultsAnswers.hasOwnProperty(qIdStr);
+        const choice = answered ? resultsAnswers[qIdStr] : null;
+        
+        html += `
+            <div class="detail-row">
+                <div class="detail-q">
+                    <strong>Q${q.id}:</strong> ${formatMarkdown(q.question)}
+                </div>
+                <div class="detail-ans-row">
+        `;
+
+        q.options.forEach(opt => {
+            const isCorrect = (opt.trim() === q.correct.trim());
+            const isSelected = (choice !== null && opt.trim() === choice.trim());
+            
+            let statusClass = 'unanswered';
+            let labelSuffix = '';
+
+            if (isSelected) {
+                statusClass = isCorrect ? 'correct' : 'selected';
+                labelSuffix = ' (Your Choice)';
+            } else if (isCorrect) {
+                statusClass = 'correct';
+                labelSuffix = ' (Correct Answer)';
+            }
+
+            html += `<span class="ans-indicator ${statusClass}">${escapeHtml(opt)}${labelSuffix}</span>`;
+        });
+
+        if (!answered) {
+            html += `<span class="ans-indicator selected" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.4); color: #fef08a;">Unanswered</span>`;
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+    
+    grid.innerHTML = html;
+    
+    // Render pagination
+    if (totalPages > 1) {
+        pagination.innerHTML = `
+            <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                Showing ${startIdx + 1}-${endIdx} of ${resultsQuestions.length} Questions
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn" style="padding: 8px 16px; font-size: 0.85rem; width: auto; background: ${resultsPage === 0 ? 'rgba(255,255,255,0.05)' : 'var(--accent-glow)'}; cursor: ${resultsPage === 0 ? 'not-allowed' : 'pointer'};" ${resultsPage === 0 ? 'disabled' : ''} onclick="changeUserResultsPage(-1)">
+                    ◀ Prev
+                </button>
+                <button class="btn" style="padding: 8px 16px; font-size: 0.85rem; width: auto; background: ${resultsPage === totalPages - 1 ? 'rgba(255,255,255,0.05)' : 'var(--accent-glow)'}; cursor: ${resultsPage === totalPages - 1 ? 'not-allowed' : 'pointer'};" ${resultsPage === totalPages - 1 ? 'disabled' : ''} onclick="changeUserResultsPage(1)">
+                    Next ▶
+                </button>
+            </div>
+        `;
+    } else {
+        pagination.innerHTML = '';
+    }
+}
+
+window.changeUserResultsPage = function(delta) {
+    const totalPages = Math.ceil(resultsQuestions.length / 10);
+    const newPage = resultsPage + delta;
+    if (newPage >= 0 && newPage < totalPages) {
+        resultsPage = newPage;
+        renderUserResultsSheet();
+        // Smooth scroll to top of results container
+        document.getElementById('results-breakdown-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};
+

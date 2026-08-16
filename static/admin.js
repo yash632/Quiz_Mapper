@@ -261,7 +261,13 @@ function renderUserAnswers(sub) {
     const pageQuestions = questionsList.slice(startIdx, endIdx);
     const userAnswers = sub.answers || {};
 
-    let html = '<div class="submission-details-scroll">';
+    let html = `
+        <div style="display: flex; gap: 12px; margin-bottom: 20px; justify-content: flex-end; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 15px;">
+            <button class="unblock-btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 8px 16px; font-size: 0.85rem;" onclick="retakeSubmission(${sub.id})">🔄 Reset & Allow Retake</button>
+            <button class="danger-btn" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 6px;" onclick="deleteSubmission(${sub.id})">🗑️ Delete Record</button>
+        </div>
+    `;
+    html += '<div class="submission-details-scroll">';
     html += '<div class="detail-grid">';
     
     pageQuestions.forEach(q => {
@@ -437,5 +443,64 @@ window.submitNewQuestion = async function(e) {
     } catch (err) {
         console.error('Failed to submit question:', err);
         alert('Network error while saving question.');
+    }
+};
+
+window.deleteSubmission = async function(subId) {
+    if (!confirm('Are you sure you want to delete this participant record completely? This cannot be undone.')) return;
+    try {
+        const res = await fetch('/api/admin/delete-submission', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + adminPasscode
+            },
+            body: JSON.stringify({ id: subId })
+        });
+        
+        if (res.status === 401) {
+            handleUnauthorized();
+            return;
+        }
+        
+        const data = await res.json();
+        if (res.ok) {
+            alert('Success! Submission deleted.');
+            expandedSubmissions.delete(subId);
+            fetchData();
+        } else {
+            alert(data.error || 'Failed to delete submission.');
+        }
+    } catch (err) {
+        console.error('Error deleting submission:', err);
+    }
+};
+
+window.retakeSubmission = async function(subId) {
+    if (!confirm('Are you sure you want to reset this submission and allow this user to retake the test?')) return;
+    try {
+        const res = await fetch('/api/admin/retake-submission', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + adminPasscode
+            },
+            body: JSON.stringify({ id: subId })
+        });
+        
+        if (res.status === 401) {
+            handleUnauthorized();
+            return;
+        }
+        
+        const data = await res.json();
+        if (res.ok) {
+            alert('Success! User is now allowed to retake the test.');
+            fetchData();
+        } else {
+            alert(data.error || 'Failed to reset submission.');
+        }
+    } catch (err) {
+        console.error('Error resetting submission:', err);
     }
 };

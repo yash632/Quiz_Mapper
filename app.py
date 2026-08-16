@@ -436,6 +436,103 @@ def add_question():
         'question': new_q
     })
 
+@app.route('/api/results', methods=['GET'])
+def get_results():
+    """Returns the user's submitted answers and the questions (with correct options) once completed."""
+    client_ip = get_client_ip()
+    if is_ip_blocked(client_ip):
+        return jsonify({'error': 'Blocked IP'}), 403
+        
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT answers, completed FROM submissions WHERE ip_address = ? ORDER BY id DESC LIMIT 1',
+            (client_ip,)
+        )
+        row = cursor.fetchone()
+        
+    if not row:
+        return jsonify({'error': 'No quiz session found for your IP address.'}), 404
+        
+    if not row['completed']:
+        return jsonify({'error': 'You must complete the quiz first to view results.'}), 400
+        
+    user_answers = json.loads(row['answers'])
+    questions = load_questions() # Loads questions including 'correct' field
+    
+    return jsonify({
+        'answers': user_answers,
+        'questions': questions
+    })
+
+@app.route('/api/admin/delete-submission', methods=['POST'])
+def delete_submission():
+    """Admin endpoint to delete a submission record completely."""
+    if not check_admin_auth():
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    data = request.get_json() or {}
+    sub_id = data.get('id')
+    
+    if not sub_id:
+        return jsonify({'error': 'Submission ID is required'}), 400
+        
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        # Get IP address before deleting to remove block if any
+        cursor.execute('SELECT ip_address FROM submissions WHERE id = ?', (sub_id,))
+        row = cursor.fetchone()
+        
+        if row:
+            ip_addr = row['ip_address']
+            # Delete block
+            cursor.execute('DELETE FROM blocked_ips WHERE ip_address = ?', (ip_addr,))
+            
+        cursor.execute('DELETE FROM submissions WHERE id = ?', (sub_id,))
+        conn.commit()
+        
+    return jsonify({'success': True, 'message': 'Submission deleted successfully.'})
+
+@app.route('/api/admin/retake-submission', methods=['POST'])
+def retake_submission():
+    """Admin endpoint to reset a submission and unblock the IP, allowing them to retake the quiz."""
+    if not check_admin_auth():
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    data = request.get_json() or {}
+    sub_id = data.get('id')
+    
+    if not sub_id:
+        return jsonify({'error': 'Submission ID is required'}), 400
+        
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        # Get IP address before resetting
+        cursor.execute('SELECT ip_address FROM submissions WHERE id = ?', (sub_id,))
+        row = cursor.fetchone()
+        
+        if not row:
+            return jsonify({'error': 'Submission not found'}), 404
+            
+        ip_addr = row['ip_address']
+        
+        # Reset submission stats
+        cursor.execute(
+            "UPDATE submissions SET answers = '{}', score = 0, completed = 0 WHERE id = ?",
+            (sub_id,)
+        )
+        
+        # Delete IP from blocked IPs list to allow them access
+        cursor.execute('DELETE FROM blocked_ips WHERE ip_address = ?', (ip_addr,))
+        
+        conn.commit()
+        
+    return jsonify({'success': True, 'message': 'Submission reset. User is allowed to retake.'})
+
+
+
 
 if __name__ == '__main__':
     # Running local server

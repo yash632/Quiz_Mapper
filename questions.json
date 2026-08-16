@@ -141,7 +141,7 @@
       "Zero",
       "Finally"
     ],
-    "correct": "Zero\nFinally"
+    "correct": "Zero\\nFinally"
   },
   {
     "id": 13,
@@ -238,5 +238,215 @@
       "[2, 6, 8]"
     ],
     "correct": "[2, 6, 12]"
+  },
+  {
+    "id": 21,
+    "topic": "List References",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)\n```",
+    "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "[4]", "Error"],
+    "correct": "[1, 2, 3, 4]"
+  },
+  {
+    "id": 22,
+    "topic": "Tuple Indexing",
+    "question": "What will be the output of the following code?\n```python\nx = (1, 2, 3)\nprint(x[1])\n```",
+    "options": ["1", "2", "3", "Error"],
+    "correct": "2"
+  },
+  {
+    "id": 23,
+    "topic": "Set",
+    "question": "What will be the output of the following code?\n```python\nx = {1, 2, 2, 3}\nprint(len(x))\n```",
+    "options": ["2", "3", "4", "Error"],
+    "correct": "3"
+  },
+  {
+    "id": 24,
+    "topic": "Dictionary Access",
+    "question": "What will be the output of the following code?\n```python\nx = {\"a\": 10, \"b\": 20}\nprint(x[\"b\"])\n```",
+    "options": ["a", "10", "20", "b"],
+    "correct": "20"
+  },
+  {
+    "id": 25,
+    "topic": "Dictionary Update",
+    "question": "What will be the output of the following code?\n```python\nx = {\"a\": 10}\nx[\"b\"] = 20\nprint(len(x))\n```",
+    "options": ["1", "2", "20", "Error"],
+    "correct": "2"
+  },
+  {
+    "id": 26,
+    "topic": "String Indexing",
+    "question": "What will be the output of the following code?\n```python\nx = \"Python\"\nprint(x[0])\n```",
+    "options": ["P", "p", "Python", "Error"],
+    "correct": "P"
+  },
+  {
+    "id": 27,
+    "topic": "Negative Indexing",
+    "question": "What will be the output of the following code?\n```python\nx = \"Python\"\nprint(x[-1])\n```",
+    "options": ["P", "n", "o", "Error"],
+    "correct": "n"
+  },
+  {
+    "id": 28,
+    "topic": "String Slicing",
+    "question": "What will be the output of the following code?\n```python\nx = \"Python\"\nprint(x[1:4])\n```",
+    "options": ["Pyt", "yth", "ytho", "tho"],
+    "correct": "yth"
+  },
+  {
+    "id": 29,
+    "topic": "String Methods",
+    "question": "What will be the output of the following code?\n```python\nx = \"python\"\nprint(x.upper())\n```",
+    "options": ["python", "Python", "PYTHON", "Error"],
+    "correct": "PYTHON"
+  },
+  {
+    "id": 30,
+    "topic": "String Replace",
+    "question": "What will be the output of the following code?\n```python\nx = \"hello world\"\nprint(x.replace(\"world\", \"Python\"))\n```",
+    "options": ["hello world", "hello Python", "Python world", "Error"],
+    "correct": "hello Python"
+  },
+  {
+    "id": 31,
+    "topic": "Functions",
+    "question": "What will be the output of the following code?\n```python\ndef add(a, b):\n    return a + b\n\nprint(add(2, 3))\n```",
+    "options": ["2", "3", "5", "None"],
+    "correct": "5"
+  },
+  {
+    "id": 32,
+    "topic": "Return Value",
+    "question": "What will be the output of the following code?\n```python\ndef test():\n    x = 10\n\nprint(test())\n```",
+    "options": ["10", "0", "None", "Error"],
+    "correct": "None"
+  },
+  {
+    "id": 33,
+    "topic": "Function Logic",
+    "question": "What will be the output of the following code?\n```python\ndef square(x):\n    return x * x\n\nprint(square(4))\n```",
+    "options": ["8", "12", "16", "20"],
+    "correct": "16"
+  },
+  {
+    "id": 34,
+    "topic": "Lambda Function",
+    "question": "What will be the output of the following code?\n```python\nx = lambda a: a * 2\nprint(x(5))\n```",
+    "options": ["5", "7", "10", "25"],
+    "correct": "10"
+  },
+  {
+    "id": 35,
+    "topic": "List Comprehension",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3, 4]\nresult = [i * 2 for i in x]\nprint(result)\n```",
+    "options": ["[1, 2, 3, 4]", "[2, 4, 6, 8]", "[1, 4, 9, 16]", "Error"],
+    "correct": "[2, 4, 6, 8]"
+  },
+  {
+    "id": 36,
+    "topic": "List Comprehension with Condition",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3, 4, 5]\nresult = [i for i in x if i % 2 == 0]\nprint(result)\n```",
+    "options": ["[1, 3, 5]", "[2, 4]", "[1, 2, 3, 4, 5]", "[]"],
+    "correct": "[2, 4]"
+  },
+  {
+    "id": 37,
+    "topic": "Even Odd Logic",
+    "question": "What will be the output of the following code?\n```python\nx = 10\n\nif x % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")\n```",
+    "options": ["Even", "Odd", "10", "Error"],
+    "correct": "Even"
+  },
+  {
+    "id": 38,
+    "topic": "Logical Operators",
+    "question": "What will be the output of the following code?\n```python\nx = 15\n\nif x % 3 == 0 and x % 5 == 0:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n```",
+    "options": ["Yes", "No", "15", "Error"],
+    "correct": "Yes"
+  },
+  {
+    "id": 39,
+    "topic": "If Elif Logic",
+    "question": "What will be the output of the following code?\n```python\nx = 10\n\nif x > 5:\n    print(\"A\")\nelif x > 8:\n    print(\"B\")\nelse:\n    print(\"C\")\n```",
+    "options": ["A", "B", "C", "A B"],
+    "correct": "A"
+  },
+  {
+    "id": 40,
+    "topic": "Break Statement",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\n\nfor i in x:\n    if i == 2:\n        break\n    print(i)\n```",
+    "options": ["1", "1 2", "1 2 3", "2"],
+    "correct": "1"
+  },
+  {
+    "id": 41,
+    "topic": "Continue Statement",
+    "question": "What will be the output of the following code?\n```python\nfor i in range(5):\n    if i == 2:\n        continue\n    print(i)\n```",
+    "options": ["0 1 2 3 4", "0 1 3 4", "1 2 3 4", "0 1"],
+    "correct": "0 1 3 4"
+  },
+  {
+    "id": 42,
+    "topic": "For Loop",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\n\nfor i in x:\n    print(i * i)\n```",
+    "options": ["1 2 3", "2 4 6", "1 4 9", "1 8 27"],
+    "correct": "1 4 9"
+  },
+  {
+    "id": 43,
+    "topic": "Multiple Assignment",
+    "question": "What will be the output of the following code?\n```python\nx = 5\ny = 10\nx, y = y, x\nprint(x, y)\n```",
+    "options": ["5 10", "10 5", "10 10", "Error"],
+    "correct": "10 5"
+  },
+  {
+    "id": 44,
+    "topic": "Membership Operator",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\nprint(2 in x)\n```",
+    "options": ["True", "False", "2", "Error"],
+    "correct": "True"
+  },
+  {
+    "id": 45,
+    "topic": "Membership Operator",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\nprint(5 not in x)\n```",
+    "options": ["True", "False", "5", "None"],
+    "correct": "True"
+  },
+  {
+    "id": 46,
+    "topic": "Identity Operator",
+    "question": "What will be the output of the following code?\n```python\nx = 10\ny = 10\n\nprint(x is y)\n```",
+    "options": ["True", "False", "10", "Error"],
+    "correct": "True"
+  },
+  {
+    "id": 47,
+    "topic": "Truthy and Falsy Values",
+    "question": "What will be the output of the following code?\n```python\nx = None\n\nif x:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n```",
+    "options": ["Yes", "No", "None", "Error"],
+    "correct": "No"
+  },
+  {
+    "id": 48,
+    "topic": "Boolean Conversion",
+    "question": "What will be the output of the following code?\n```python\nx = [1, 2, 3]\n\nprint(bool(x))\n```",
+    "options": ["True", "False", "1", "Error"],
+    "correct": "True"
+  },
+  {
+    "id": 49,
+    "topic": "Falsy Values",
+    "question": "What will be the output of the following code?\n```python\nx = 0\n\nif x:\n    print(\"A\")\nelse:\n    print(\"B\")\n```",
+    "options": ["A", "B", "0", "Error"],
+    "correct": "B"
+  },
+  {
+    "id": 50,
+    "topic": "Comparison Operators",
+    "question": "What will be the output of the following code?\n```python\nx = 5\n\nprint(x == 5)\nprint(x != 5)\n```",
+    "options": ["True True", "False False", "True False", "False True"],
+    "correct": "True False"
   }
 ]

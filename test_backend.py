@@ -202,5 +202,83 @@ class QuizBackendTestCase(unittest.TestCase):
             if os.path.exists(test_questions_path):
                 os.remove(test_questions_path)
 
+    def test_results_access_control(self):
+        """Test results API validation paths."""
+        # Unregistered request -> 404
+        res = self.app.get('/api/results')
+        self.assertEqual(res.status_code, 404)
+
+        # Register session
+        self.app.post('/api/register', 
+                      data=json.dumps({'name': 'Tester'}),
+                      content_type='application/json')
+
+        # Registered but incomplete -> 400
+        res = self.app.get('/api/results')
+        self.assertEqual(res.status_code, 400)
+
+        # Submit answers to all questions to trigger completion
+        questions = json.loads(self.app.get('/api/questions').data)
+        for q in questions:
+            self.app.post('/api/submit-answer',
+                          data=json.dumps({'question_id': q['id'], 'answer': 'some_val'}),
+                          content_type='application/json')
+
+        # Completed session -> 200 with keys
+        res = self.app.get('/api/results')
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertIn('answers', data)
+        self.assertIn('questions', data)
+        self.assertGreater(len(data['questions']), 0)
+        self.assertIn('correct', data['questions'][0]) # Verify answer keys are now present
+
+    def test_delete_and_retake_submissions(self):
+        """Test admin commands for deleting records and resetting to retake."""
+        import app as app_mod
+        headers = {'Authorization': f'Bearer {app_mod.ADMIN_PASSCODE}'}
+
+        # Register a tester
+        self.app.post('/api/register', 
+                      data=json.dumps({'name': 'UserToModify'}),
+                      content_type='application/json')
+        
+        # Verify user exists in admin dashboard
+        dash = json.loads(self.app.get('/api/admin/dashboard', headers=headers).data)
+        submission = next(s for s in dash['submissions'] if s['name'] == 'UserToModify')
+        sub_id = submission['id']
+        
+        # Test 1: Allow Retake
+        # Submit an answer first
+        self.app.post('/api/submit-answer',
+                      data=json.dumps({'question_id': 1, 'answer': 'some_val'}),
+                      content_type='application/json')
+        
+        # Call retake API
+        retake_res = self.app.post('/api/admin/retake-submission',
+                                   headers=headers,
+                                   data=json.dumps({'id': sub_id}),
+                                   content_type='application/json')
+        self.assertEqual(retake_res.status_code, 200)
+        
+        # Verify answers reset to empty
+        dash = json.loads(self.app.get('/api/admin/dashboard', headers=headers).data)
+        submission = next(s for s in dash['submissions'] if s['id'] == sub_id)
+        self.assertEqual(submission['answers'], {})
+        self.assertEqual(submission['completed'], False)
+        self.assertEqual(submission['score'], 0)
+
+        # Test 2: Delete Submission
+        delete_res = self.app.post('/api/admin/delete-submission',
+                                   headers=headers,
+                                   data=json.dumps({'id': sub_id}),
+                                   content_type='application/json')
+        self.assertEqual(delete_res.status_code, 200)
+
+        # Verify user no longer exists in submissions list
+        dash = json.loads(self.app.get('/api/admin/dashboard', headers=headers).data)
+        names = [s['name'] for s in dash['submissions']]
+        self.assertNotIn('UserToModify', names)
+
 if __name__ == '__main__':
     unittest.main()

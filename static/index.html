@@ -41,7 +41,7 @@
                     Participant: <span id="display-name" style="color: #a78bfa;">User</span>
                 </div>
                 <div class="progress-text">
-                    Question <span id="current-q-index">1</span> of <span id="total-q-count">20</span>
+                    Question <span id="current-q-index">1</span> of <span id="total-q-count">-</span>
                 </div>
             </div>
 
@@ -85,7 +85,7 @@
             <div class="score-circle-container">
                 <div class="score-circle">
                     <div id="score-val" class="score-number">0</div>
-                    <div class="score-total">out of <span id="score-total-val">20</span></div>
+                    <div class="score-total">out of <span id="score-total-val">-</span></div>
                 </div>
             </div>
             
@@ -96,8 +96,21 @@
                 Great job! Your answers have been successfully registered in the ACID secure logs. 
                 Your final score is <span id="final-pct" class="success-badge">0%</span>.
             </div>
+
+            <!-- Results Breakdown Panel (Color-coded and Paginated) -->
+            <div id="results-breakdown-container" style="margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px; display: none; text-align: left;">
+                <h2 style="font-size: 1.4rem; color: #a78bfa; margin-bottom: 20px; text-align: center; border-bottom: none;">Detailed Review Sheet</h2>
+                <div id="user-results-scroll" class="submission-details-scroll">
+                    <div id="user-results-grid" class="detail-grid">
+                        <!-- User options compared to correct answers loaded here -->
+                    </div>
+                </div>
+                <div id="user-results-pagination" class="pagination-controls" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                    <!-- pagination elements -->
+                </div>
+            </div>
             
-            <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+            <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary); margin-top: 15px;">
                 Results locked under session hash logs.
             </p>
         </div>
