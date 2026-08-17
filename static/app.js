@@ -192,7 +192,7 @@ async function submitAnswer(qId, answerText, clickedButton) {
         }
 
         const data = await res.json();
-        if (res.ok) {
+        if (res.ok && data.success) {
             // Animate transition delay to let user see selection
             setTimeout(() => {
                 currentIndex++;
@@ -204,12 +204,15 @@ async function submitAnswer(qId, answerText, clickedButton) {
                 }
             }, 800);
         } else {
-            alert(data.error || 'Failed to submit answer');
+            alert(data.error || 'Failed to save answer on the server. Please try again.');
             buttons.forEach(btn => btn.classList.remove('disabled'));
             clickedButton.classList.remove('selected');
         }
     } catch (err) {
         console.error('Submission failed:', err);
+        alert('Network error: Could not reach the server. Please check your internet and try again.');
+        buttons.forEach(btn => btn.classList.remove('disabled'));
+        clickedButton.classList.remove('selected');
     }
 }
 
